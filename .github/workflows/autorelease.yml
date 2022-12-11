@@ -93,23 +93,23 @@ jobs:
 
       - name: make package
         run: |
-          mkdir raw-keylogger
-          copy bin\\SliverKeylogger.x86.dll raw-keylogger\\SliverKeylogger.x86.dll
-          copy bin\\SliverKeylogger.x64.dll raw-keylogger\\SliverKeylogger.x64.dll
-          copy extension.json raw-keylogger\\extension.json
-          cd raw-keylogger
-          tar -czvf ..\raw-keylogger.tar.gz .
+          mkdir keylogger
+          copy bin\\SliverKeylogger.x86.dll keylogger\\SliverKeylogger.x86.dll
+          copy bin\\SliverKeylogger.x64.dll keylogger\\SliverKeylogger.x64.dll
+          copy extension.json keylogger\\extension.json
+          cd keylogger
+          tar -czvf ..\keylogger.tar.gz .
 
       - name: sign package
         run: |
           Write-Output "${{ secrets.MINISIGN_PRIVATE_KEY }}" > minisign.key
-          $Content1 = Get-Content -Path ./raw-keylogger/extension.json
+          $Content1 = Get-Content -Path ./keylogger/extension.json
           $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Content1)
           $Encoded = [System.Convert]::ToBase64String($Bytes)
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest -Verbose -Uri https://github.com/moloch--/minisign/releases/download/v0.2.1/minisign.exe -OutFile minisign.exe
           ls
-          .\minisign.exe -s minisign.key -S -m raw-keylogger.tar.gz -t "$Encoded" -x raw-keylogger.minisig
+          .\minisign.exe -s minisign.key -S -m keylogger.tar.gz -t "$Encoded" -x keylogger.minisig
 
       - name: "Publish Release"
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -118,5 +118,5 @@ jobs:
           prerelease: false
           automatic_release_tag: ${{ needs.sync_latest_from_upstream.outputs.tag || 'v0.0.0' }}
           files: |
-            raw-keylogger.minisig
-            raw-keylogger.tar.gz
+            keylogger.minisig
+            keylogger.tar.gz
