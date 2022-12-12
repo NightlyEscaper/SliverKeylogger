@@ -66,13 +66,6 @@ jobs:
     runs-on: windows-2019
     timeout-minutes: 10
     steps:
-      - name: Download Tools
-        run: |
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest -Uri https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe -OutFile jq.exe
-          Invoke-WebRequest -Verbose -Uri https://github.com/moloch--/minisign/releases/download/v0.2.1/minisign.exe -OutFile minisign.exe
-          ls
-
       - name: checkout code
         uses: actions/checkout@v3
 
@@ -97,6 +90,7 @@ jobs:
           mkdir keylogger
           copy bin\\SliverKeylogger.x86.dll keylogger\\SliverKeylogger.x86.dll
           copy bin\\SliverKeylogger.x64.dll keylogger\\SliverKeylogger.x64.dll
+          Invoke-WebRequest -Uri https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe -OutFile jq.exe
           Get-Content -Path extension.json | .\jq.exe '.version |= ""${{ needs.sync_latest_from_upstream.outputs.tag || 'v0.0.0' }}""' > ./keylogger/alias.json
           cd keylogger
           tar -czvf ..\keylogger.tar.gz .
