@@ -91,7 +91,7 @@ jobs:
           copy bin\\SliverKeylogger.x86.dll keylogger\\SliverKeylogger.x86.dll
           copy bin\\SliverKeylogger.x64.dll keylogger\\SliverKeylogger.x64.dll
           Invoke-WebRequest -Uri https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe -OutFile jq.exe
-          Get-Content -Path extension.json | .\jq.exe '.version |= ""${{ needs.sync_latest_from_upstream.outputs.tag || 'v0.0.0' }}""' > ./keylogger/alias.json
+          Get-Content -Path extension.json | .\jq.exe '.version |= ""${{ needs.sync_latest_from_upstream.outputs.tag || 'v0.0.0' }}""' > ./keylogger/extension.json
           cd keylogger
           tar -czvf ..\keylogger.tar.gz .
 
