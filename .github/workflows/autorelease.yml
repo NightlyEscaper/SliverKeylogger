@@ -96,7 +96,7 @@ jobs:
           mkdir keylogger
           copy bin\\SliverKeylogger.x86.dll keylogger\\SliverKeylogger.x86.dll
           copy bin\\SliverKeylogger.x64.dll keylogger\\SliverKeylogger.x64.dll
-          copy extension.json keylogger\\extension.json
+          Get-Content -Path extension.json | .\jq.exe '.version |= ""${{ needs.sync_latest_from_upstream.outputs.tag || 'v0.0.0' }}""' > ./keylogger/alias.json
           cd keylogger
           tar -czvf ..\keylogger.tar.gz .
 
